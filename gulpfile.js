@@ -15,6 +15,17 @@ outputStyle:
 		'compressed'
 */
 
+// sass compiler for admin code
+gulp.task('admin-sass',function(){
+	return gulp
+		.src('admin/*.scss')
+		.pipe(sass({outputStyle: 'nested'}))
+		.pipe(concat('admin-style.css'))
+		.pipe(gulp.dest('admin/'))
+		// .pipe( rename( { suffix: '.min' } ) )
+		.pipe(browserSync.stream());
+});
+
 // sass compiler
 gulp.task('sass',function(){
 	return gulp
@@ -40,9 +51,18 @@ gulp.task('watch',function(){
 		gulp.series('sass')
 	);
 
+	// run admin-sass task
+	gulp.watch('admin/*.scss',
+		gulp.series('admin-sass')
+	);
+
 	// update on php changes
 	gulp.watch("**/*.php").on('change', browserSync.reload);
 });
 
 // makes so that the "gulp" command runs what we want, the watcher   
 gulp.task('default', gulp.series('watch'));
+
+
+
+
